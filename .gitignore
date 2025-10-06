@@ -1,0 +1,14 @@
+# Archivos Excel originales (si quieres mantenerlos privados)
+*.xlsx
+
+# macOS
+.DS_Store
+
+# Node modules
+node_modules/
+package-lock.json
+
+# Otros
+*.pyc
+__pycache__/
+

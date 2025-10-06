@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte Sprint 6 - Q3 2025</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 40px;
+            background: #f8f9fa;
+            border-bottom: 3px solid #e9ecef;
+        }
+
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+        }
+
+        .chart-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .chart-container h3 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        #taskChart {
+            max-width: 300px;
+            max-height: 300px;
+        }
+
+        .chart-legend {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9em;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        .legend-completed { background: #28a745; }
+        .legend-review { background: #ffc107; }
+        .legend-dismissed { background: #fd7e14; }
+        .legend-cancelled { background: #dc3545; }
+
+        .summary-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+        }
+
+        .summary-card h3 {
+            color: #6c757d;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .summary-card .number {
+            font-size: 3em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .track-section {
+            margin-bottom: 50px;
+            background: #ffffff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .track-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px 30px;
+        }
+
+        .track-header h2 {
+            font-size: 1.8em;
+        }
+
+        .track-content {
+            padding: 30px;
+        }
+
+        .epic-group {
+            margin-bottom: 35px;
+        }
+
+        .epic-title {
+            font-size: 1.3em;
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-weight: 600;
+            border-left: 4px solid #667eea;
+            padding-left: 15px;
+        }
+
+        footer {
+            background: #2d3748;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        @media print {
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; }
+            .track-section { page-break-inside: avoid; }
+        }
+
+        @media (max-width: 768px) {
+            .summary { grid-template-columns: 1fr; }
+            .chart-legend { grid-template-columns: 1fr; }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 Reporte Sprint 6 - Q3 2025</h1>
+            <p>Highlights y Logros del Sprint</p>
+            <p style="font-size: 0.9em; margin-top: 10px; opacity: 0.8;">Generado el 6 de Octubre, 2025</p>
+        </header>
+
+        <!-- MÉTRICAS CLAVE -->
+        <div class="track-section" style="margin-bottom: 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            <div class="track-header" style="background: rgba(0,0,0,0.2);">
+                <h2>📈 Métricas Clave del Sprint</h2>
+            </div>
+            <div class="track-content" style="color: white;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                    <div style="background: rgba(255,255,255,0.15); padding: 25px; border-radius: 10px; backdrop-filter: blur(10px);">
+                        <h3 style="margin-bottom: 15px; font-size: 1.3em;">📦 Kits</h3>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span>Adopción Sugerencia Fotos:</span>
+                            <span style="font-weight: bold; font-size: 1.2em;">95%</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Adopción Sugerencia Título:</span>
+                            <span style="font-weight: bold; font-size: 1.2em;">64%</span>
+                        </div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.15); padding: 25px; border-radius: 10px; backdrop-filter: blur(10px);">
+                        <h3 style="margin-bottom: 15px; font-size: 1.3em;">🏷️ Categorización</h3>
+                        <p style="margin-bottom: 10px; font-size: 0.95em;">
+                            <strong>27%</strong> del share de moderaciones en los últimos días correspondió a la nueva validación imagen-dominio.
+                        </p>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>Ítems CBT moderados (30 Sep - 03 Oct):</span>
+                            <span style="font-weight: bold; font-size: 1.2em;">1.8M</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="summary">
+            <div class="summary-stats">
+                <div class="summary-card">
+                    <h3>Total Tareas</h3>
+                    <div class="number">50</div>
+                </div>
+                <div class="summary-card">
+                    <h3>Finalizadas</h3>
+                    <div class="number">44</div>
+                </div>
+                <div class="summary-card">
+                    <h3>Tasa de Éxito</h3>
+                    <div class="number">88%</div>
+                </div>
+                <div class="summary-card">
+                    <h3>Tracks Activos</h3>
+                    <div class="number">4</div>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <h3>📊 Estado de Tareas</h3>
+                <canvas id="taskChart"></canvas>
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <div class="legend-color legend-completed"></div>
+                        <span>Finalizadas (44)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color legend-review"></div>
+                        <span>En Revisión (1)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color legend-dismissed"></div>
+                        <span>Dismissed (1)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color legend-cancelled"></div>
+                        <span>Canceladas (4)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- RESUMEN POR TRACK -->
+            <div class="track-section">
+                <div class="track-header">
+                    <h2>📊 Resumen por Track</h2>
+                </div>
+                <div class="track-content">
+                    <!-- MEJORAS BUSCADOR -->
+                    <div class="epic-group">
+                        <div class="epic-title">🔍 Mejoras Buscador</div>
+                        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <span style="font-weight: 600; color: #2d3748; font-size: 1.1em;">Tareas Completadas</span>
+                                <span style="background: #28a745; color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold;">25 de 26</span>
+                            </div>
+                            <p style="color: #6c757d; line-height: 1.8; margin-bottom: 15px;">
+                                <strong>Búsqueda por Fotos (18 tareas):</strong> Implementación completa del flujo end-to-end incluyendo middleware con arquitectura de dos momentos, integración con servicios de validación (picture-guardian, modelos de calidad y reputación), optimización con Gemini Pro, DB vectorial, y definición de métricas. Pruebas realizadas con muestra significativa cross-domain.
+                            </p>
+                            <p style="color: #6c757d; line-height: 1.8;">
+                                <strong>Búsqueda por Prompt (5 tareas):</strong> Validación exitosa del POC v2 con soporte para publicación de variantes según categoría, ajustes en atributos solicitados, y documentación técnica lista para integración con el asistente conversacional.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- CATEGORIZACIÓN -->
+                    <div class="epic-group">
+                        <div class="epic-title">🏷️ Categorización</div>
+                        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <span style="font-weight: 600; color: #2d3748; font-size: 1.1em;">Tareas Completadas</span>
+                                <span style="background: #28a745; color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold;">9 de 9</span>
+                            </div>
+                            <p style="color: #6c757d; line-height: 1.8; margin-bottom: 15px;">
+                                <strong>Soporte Recategorización (8 tareas):</strong> Optimización completa del prompt de recategorización con reducción de errores CBT, mejoras en el manejo de atributos completados por el seller, análisis de propuesta one-shot, experimentación con atributos adicionales al título e imagen, y revisión de casos especiales como kits. Optimización del despliegue en tagging-domain-search.
+                            </p>
+                            <p style="color: #6c757d; line-height: 1.8; margin-bottom: 15px;">
+                                <strong>Validación Imagen-Dominio:</strong> Implementación de nueva lógica de validación imagen-dominio con ajuste de reglas del modelo NSFW priorizando mayor peso a la imagen. Reprocesos exitosos en dominios específicos como REUSABLE_MAKEUP_REMOVERS y RESISTANCE_BANDS para mejorar precisión de categorización.
+                            </p>
+                            <p style="color: #6c757d; line-height: 1.8; margin-bottom: 15px;">
+                                <strong>Desblindaje Moderación:</strong> Implementación exitosa del desblindaje para moderación de las sugerencias de categorías, mejorando la transparencia y eficiencia del proceso de revisión manual.
+                            </p>
+                            <p style="color: #6c757d; line-height: 1.8;">
+                                <strong>Mejoras Imagen (1 tarea):</strong> Análisis exhaustivo de resultados del reentrenamiento de waves para mejora continua del modelo.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- CALIDAD DE IMAGEN -->
+                    <div class="epic-group">
+                        <div class="epic-title">📷 Calidad de Imagen</div>
+                        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <span style="font-weight: 600; color: #2d3748; font-size: 1.1em;">Tareas Completadas</span>
+                                <span style="background: #28a745; color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold;">8 de 9</span>
+                            </div>
+                            <p style="color: #6c757d; line-height: 1.8;">
+                                <strong>Foto Profesional Fashion (8 tareas):</strong> Avance significativo en el desarrollo del modelo cross-site con data balanceada para generalización profesional, diseño técnico completo del modelo cross, entrenamiento especializado, etiquetado de dataset usando CIF-GPT, adquisición de dataset fashion profesional, análisis de modelos complementarios, y ajuste de contratos técnicos con socialización al equipo de Fashion.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- KITS -->
+                    <div class="epic-group">
+                        <div class="epic-title">📦 Kits</div>
+                        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <span style="font-weight: 600; color: #2d3748; font-size: 1.1em;">Tareas Completadas</span>
+                                <span style="background: #28a745; color: white; padding: 5px 15px; border-radius: 20px; font-weight: bold;">Completado</span>
+                            </div>
+                            <p style="color: #6c757d; line-height: 1.8;">
+                                <strong>Implementación nano-banana:</strong> Finalización exitosa de la implementación de nano-banana, completando la integración y funcionalidad requerida para el manejo optimizado de kits en el sistema.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LOWS / CHALLENGES -->
+            <div class="track-section" style="background: linear-gradient(135deg, #ffc107 0%, #ff6b6b 100%); color: white;">
+                <div class="track-header" style="background: rgba(0,0,0,0.2);">
+                    <h2>⚠️ Lows y Accionables del Sprint</h2>
+                </div>
+                <div class="track-content" style="color: white;">
+                    <div style="display: grid; gap: 20px;">
+                        <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 10px; backdrop-filter: blur(10px);">
+                            <h3 style="margin-bottom: 10px;">🔍 Mejoras Buscador - Optimización Pendiente</h3>
+                            <p>Se requiere completar la implementación de caché para mejorar los tiempos de respuesta en sugerencias con IA. Adicionalmente, se descartaron 3 tareas relacionadas con pruebas E2E y ajustes técnicos que necesitan re-evaluación en el próximo sprint para determinar si son necesarias bajo el nuevo enfoque arquitectónico.</p>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 10px; backdrop-filter: blur(10px);">
+                            <h3 style="margin-bottom: 10px;">📷 Calidad de Imagen - Experimentación Descartada</h3>
+                            <p>La experimentación con segmentación para detección de fondos fue cancelada. Es necesario revisar si este approach es viable o si se debe explorar una alternativa técnica diferente para mejorar la detección de calidad de fondos en las imágenes profesionales.</p>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 10px; backdrop-filter: blur(10px);">
+                            <h3 style="margin-bottom: 10px;">🎯 Accionables Generales</h3>
+                            <p>De las 6 tareas no completadas, 4 fueron canceladas y requieren análisis para determinar impacto en funcionalidad. Una tarea está en revisión (caché de sugerencias) y debe priorizarse para cierre. Se recomienda realizar retrospectiva sobre las cancelaciones para validar que no afecten objetivos del producto.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KEY ACHIEVEMENTS -->
+            <div class="track-section" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">
+                <div class="track-header" style="background: rgba(0,0,0,0.2);">
+                    <h2>🎯 Highlights del Sprint</h2>
+                </div>
+                <div class="track-content" style="color: white;">
+                    <div style="display: grid; gap: 20px;">
+                        <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 10px; backdrop-filter: blur(10px);">
+                            <h3 style="margin-bottom: 10px;">🚀 Búsqueda por Foto - Lanzamiento Exitoso</h3>
+                            <p>Se completó la implementación completa del flujo de búsqueda por foto con integración de validaciones de calidad, optimización con Gemini Pro, y middleware con arquitectura de dos momentos. Total: 18 tareas finalizadas.</p>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 10px; backdrop-filter: blur(10px);">
+                            <h3 style="margin-bottom: 10px;">✨ Foto Profesional Fashion</h3>
+                            <p>Avance significativo en el modelo de foto profesional con data cross-site, entrenamiento especializado y diseño técnico cross. Se completó la socialización y ajuste de contratos para Fashion.</p>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 10px; backdrop-filter: blur(10px);">
+                            <h3 style="margin-bottom: 10px;">💬 Búsqueda por Prompt</h3>
+                            <p>Validación exitosa del POC v2 con soporte para variantes, ajustes en atributos y documentación lista para integración con el asistente conversacional.</p>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 10px; backdrop-filter: blur(10px);">
+                            <h3 style="margin-bottom: 10px;">🏷️ Mejoras en Categorización</h3>
+                            <p>Optimización del prompt de recategorización con reducción de errores CBT e implementación de nueva lógica de validación imagen-dominio. Ajuste del modelo NSFW priorizando peso a la imagen, con reprocesos exitosos en dominios como REUSABLE_MAKEUP_REMOVERS y RESISTANCE_BANDS.</p>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.15); padding: 20px; border-radius: 10px; backdrop-filter: blur(10px);">
+                            <h3 style="margin-bottom: 10px;">📦 Kits - Nano-banana</h3>
+                            <p>Finalización exitosa de la implementación de nano-banana para el manejo optimizado de kits, completando la integración end-to-end y habilitando nuevas capacidades en el sistema.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <footer>
+            <p style="font-size: 1.1em; margin-bottom: 10px;">Sprint 6 - Q3 2025</p>
+            <p style="opacity: 0.8;">Reporte generado automáticamente desde datos de Jira</p>
+        </footer>
+    </div>
+
+    <script>
+        // Create pie chart for task status
+        const ctx = document.getElementById('taskChart').getContext('2d');
+        const taskChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: ['Finalizadas', 'En Revisión', 'Dismissed', 'Canceladas'],
+                datasets: [{
+                    data: [44, 1, 1, 4],
+                    backgroundColor: [
+                        '#28a745',  // Green for completed
+                        '#ffc107',  // Yellow for in review
+                        '#fd7e14',  // Orange for dismissed
+                        '#dc3545'   // Red for cancelled
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#ffffff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        display: false  // We're using custom legend
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.parsed || 0;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = ((value / total) * 100).toFixed(1);
+                                return `${label}: ${value} (${percentage}%)`;
+                            }
+                        },
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        titleFont: {
+                            size: 14,
+                            weight: 'bold'
+                        },
+                        bodyFont: {
+                            size: 13
+                        },
+                        padding: 12,
+                        cornerRadius: 8
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
